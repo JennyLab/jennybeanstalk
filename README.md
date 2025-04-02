@@ -16,7 +16,7 @@ to abide by its terms. See CodeOfConduct.txt for details.
 
 ## Quick Start
 
-    $ make
+    $ make -j$(nproc)
     $ ./beanstalkd
 
 
@@ -24,11 +24,20 @@ also try,
 
     $ ./beanstalkd -h
     $ ./beanstalkd -VVV
-    $ make CFLAGS=-O2
-    $ make CC=clang
+    $ make -j$(nproc) CFLAGS=-O2
+    $ make -j$(nproc) CC=clang
     $ make check
     $ make install
     $ make install PREFIX=/usr
+
+see also... use cmake
+
+    $ mkdir build 
+    $ cd build
+    $ cmake ..
+    $ make -j$(nproc)
+    $ make install
+ 
 
 Requires Linux (2.6.17 or later), Mac OS X, FreeBSD, or Illumos.
 
