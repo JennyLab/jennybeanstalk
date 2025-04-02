@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(beanstalkd)
 
-# Establecer el estándar de C y las banderas de compilación.
+# C99 Standard!! r0x!
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wformat=2 -g")
 
-# Incluir directorios de encabezados.
+# Include Headers
 include_directories(${CMAKE_SOURCE_DIR})
 
-# Archivos de origen principales.
+# Source Files
 set(OFILES
     conn.c
     file.c
@@ -28,7 +28,7 @@ set(OFILES
 
 set(MOFILE main.c)
 
-# Configuración específica del sistema operativo.
+# Linux config
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     list(APPEND LDFLAGS "-lrt")
 endif()
@@ -37,7 +37,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "SunOS")
     list(APPEND LDFLAGS "-lxnet -lsocket -lnsl")
 endif()
 
-# Soporte para systemd.
+# Systemd Support
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBSYSTEMD libsystemd)
 if(LIBSYSTEMD_FOUND AND NOT USE_SYSTEMD STREQUAL "no")
