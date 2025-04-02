@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(beanstalkd)
 
+# Establecer el estándar de C y las banderas de compilación.
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wformat=2 -g")
 
+# Incluir directorios de encabezados.
 include_directories(${CMAKE_SOURCE_DIR})
 
-# Source files
+# Archivos de origen principales.
 set(OFILES
     conn.c
     file.c
@@ -26,7 +28,7 @@ set(OFILES
 
 set(MOFILE main.c)
 
-# System-specific settings
+# Configuración específica del sistema operativo.
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     list(APPEND LDFLAGS "-lrt")
 endif()
@@ -35,7 +37,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "SunOS")
     list(APPEND LDFLAGS "-lxnet -lsocket -lnsl")
 endif()
 
-# Systemd support
+# Soporte para systemd.
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBSYSTEMD libsystemd)
 if(LIBSYSTEMD_FOUND AND NOT USE_SYSTEMD STREQUAL "no")
@@ -45,42 +47,45 @@ elseif(USE_SYSTEMD STREQUAL "yes")
     message(FATAL_ERROR "USE_SYSTEMD is set to '${USE_SYSTEMD}', but libsystemd is not found")
 endif()
 
+# Crear el ejecutable principal.
 add_executable(${PROJECT_NAME} ${OFILES} ${MOFILE})
 
-# Link libraries
+# Vincular bibliotecas.
 target_link_libraries(${PROJECT_NAME} ${LDFLAGS})
 
-# Install settings
+# Configuraciones de instalación.
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
-# Custom targets
+# Objetivo personalizado para limpiar archivos.
 add_custom_target(clean
     COMMAND ${CMAKE_COMMAND} -E remove ${CLEANFILES}
 )
 
+# Objetivo personalizado para check.
 add_custom_target(check
     COMMAND ct/_ctcheck
 )
 
+# Objetivo personalizado para bench.
 add_custom_target(bench
     COMMAND ct/_ctcheck -b
 )
 
-# Version generation
+# Generación de versión.
 add_custom_command(
     OUTPUT vers.c
     COMMAND ./verc.sh > vers.c
     DEPENDS verc.sh
 )
 
-# Documentation
+# Documentación.
 add_custom_command(
     OUTPUT doc/beanstalkd.1 doc/beanstalkd.1.html
     COMMAND ronn doc/beanstalkd.ronn
     DEPENDS doc/beanstalkd.ronn
 )
 
-# Test files
+# Archivos de prueba.
 set(TOFILES
     testheap.c
     testjobs.c
@@ -89,5 +94,5 @@ set(TOFILES
     testutil.c
 )
 
-# Compilation of test files
+# Compilación de archivos de prueba.
 add_executable(ct/_ctcheck ct/_ctcheck.c ct/ct.c ${TOFILES} ${OFILES})
