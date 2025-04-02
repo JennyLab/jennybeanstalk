@@ -47,45 +47,45 @@ elseif(USE_SYSTEMD STREQUAL "yes")
     message(FATAL_ERROR "USE_SYSTEMD is set to '${USE_SYSTEMD}', but libsystemd is not found")
 endif()
 
-# Crear el ejecutable principal.
+# Executable Build
 add_executable(${PROJECT_NAME} ${OFILES} ${MOFILE})
 
-# Vincular bibliotecas.
+# Link Library
 target_link_libraries(${PROJECT_NAME} ${LDFLAGS})
 
-# Configuraciones de instalación.
+# Make install config
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
-# Objetivo personalizado para limpiar archivos.
+# Make clean
 add_custom_target(clean
     COMMAND ${CMAKE_COMMAND} -E remove ${CLEANFILES}
 )
 
-# Objetivo personalizado para check.
+# Make check
 add_custom_target(check
     COMMAND ct/_ctcheck
 )
 
-# Objetivo personalizado para bench.
+# BenchMark
 add_custom_target(bench
     COMMAND ct/_ctcheck -b
 )
 
-# Generación de versión.
+# Make version
 add_custom_command(
     OUTPUT vers.c
     COMMAND ./verc.sh > vers.c
     DEPENDS verc.sh
 )
 
-# Documentación.
+# Doc
 add_custom_command(
     OUTPUT doc/beanstalkd.1 doc/beanstalkd.1.html
     COMMAND ronn doc/beanstalkd.ronn
     DEPENDS doc/beanstalkd.ronn
 )
 
-# Archivos de prueba.
+# Test Files
 set(TOFILES
     testheap.c
     testjobs.c
@@ -94,5 +94,10 @@ set(TOFILES
     testutil.c
 )
 
-# Compilación de archivos de prueba.
+# Compile Test files.
 add_executable(ct/_ctcheck ct/_ctcheck.c ct/ct.c ${TOFILES} ${OFILES})
+
+message(STATUS "Ok his build!!! :D ")
+message("make -j$(nproc)")
+
+
