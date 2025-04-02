@@ -98,6 +98,6 @@ set(TOFILES
 add_executable(ct/_ctcheck ct/_ctcheck.c ct/ct.c ${TOFILES} ${OFILES})
 
 message(STATUS "Ok his build!!! :D ")
-message("make -j$(nproc)")
+message("run: make -j$(nproc)")
 
 
