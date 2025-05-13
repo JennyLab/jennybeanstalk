@@ -7,9 +7,12 @@ on:
       - master
 jobs:
   tests:
-    name: Tests
-    runs-on: ubuntu-latest
+    name: Tests on ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Tests
         run: make check
