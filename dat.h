@@ -284,6 +284,9 @@ void warnx(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
 char* fmtalloc(char *fmt, ...) __attribute__((format(printf, 1, 2)));
 void* zalloc(int n);
 #define new(T) zalloc(sizeof(T))
+void* fzalloc(int n);
+#define new(T) (File *)fzalloc(sizeof(T))
+
 void optparse(Server*, char**);
 
 extern const char *progname;

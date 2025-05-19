@@ -189,24 +189,24 @@ static void
 start(Test *t)
 {
     t->fd = tmpfd();
-    strcpy(t->dir, TmpDirPat);
+    strlcpy(t->dir, TmpDirPath,MAX_TMPPATH_SIZE);
     if (mkdtemp(t->dir) == NULL) {
-	die(1, errno, "mkdtemp");
+	die(1, errno, "[ERROR] ctc::start(): mkdtemp");
     }
     fflush(NULL);
     t->pid = fork();
     if (t->pid < 0) {
-        die(1, errno, "fork");
+        die(1, errno, "[ERROR] ctc::start(): fork");
     } else if (!t->pid) {
         setpgid(0, 0);
         if (dup2(t->fd, 1) == -1) {
-            die(3, errno, "dup2");
+            die(3, errno, "[ERROR] ctc::start(): dup2");
         }
         if (close(t->fd) == -1) {
-            die(3, errno, "fclose");
+            die(3, errno, "[ERROR] ctc::start(): fclose");
         }
         if (dup2(1, 2) == -1) {
-            die(3, errno, "dup2");
+            die(3, errno, "[ERROR] ctc::start(): dup2");
         }
         curdir = t->dir;
         t->f();
@@ -246,7 +246,7 @@ copyfd(FILE *out, int in)
 
     while ((n = read(in, buf, sizeof(buf))) != 0) {
         if (fwrite(buf, 1, n, out) != (size_t)n) {
-            die(3, errno, "fwrite");
+            die(3, errno, "[ERROR] ctc::conpyfd(): fwrite");
         }
     }
 }
@@ -300,7 +300,7 @@ runbenchn(Benchmark *b, int n)
 {
     int outfd = tmpfd();
     int durfd = tmpfd();
-    strcpy(b->dir, TmpDirPat);
+    strlcpy(b->dir, TmpDirPath,MAX_TMPPATH_SIZE);
     if (mkdtemp(b->dir) == NULL) {
 	die(1, errno, "mkdtemp");
     }
@@ -529,8 +529,8 @@ readtokens()
     if (v == NULL)
         return n;
     if ((s = strstr(v, " --jobserver-fds="))) {
-        rjobfd = (int)strtol(s+17, &s, 10);  /* skip " --jobserver-fds=" */
-        wjobfd = (int)strtol(s+1, NULL, 10); /* skip comma */
+        rjobfd = (int)__STRTOL(s+17, &s, 10);  /* skip " --jobserver-fds=" */
+        wjobfd = (int)__STRTOL(s+1, NULL, 10); /* skip comma */
     }
     if (rjobfd >= 0) {
         fcntl(rjobfd, F_SETFL, fcntl(rjobfd, F_GETFL)|O_NONBLOCK);

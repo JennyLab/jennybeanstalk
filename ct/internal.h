@@ -1,6 +1,9 @@
 /* include <stdint.h> */
 
-#define TmpDirPat "/tmp/ct.XXXXXX"
+#define TmpDirPath "/tmp/ct.XXXXXX"
+
+#define MAX_TMPPATH_SIZE 14
+
 
 typedef int64_t int64;
 typedef struct Test Test;
@@ -12,7 +15,7 @@ struct Test {
     int  status;
     int  fd;
     int  pid;
-    char dir[sizeof TmpDirPat];
+    char dir[MAX_TMPPATH_SIZE];
 };
 
 struct Benchmark {
@@ -21,7 +24,7 @@ struct Benchmark {
     int   status;
     int64 dur;
     int64 bytes;
-    char  dir[sizeof TmpDirPat];
+    char  dir[MAX_TMPPATH_SIZE];
 };
 
 extern Test ctmaintest[];

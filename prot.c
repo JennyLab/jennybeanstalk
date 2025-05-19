@@ -282,6 +282,9 @@ static const char * op_names[] = {
 static Job *remove_ready_job(Job *j);
 static Job *remove_buried_job(Job *j);
 
+
+
+
 // epollq_add schedules connection c in the s->conns heap, adds c
 // to the epollq list to change expected operation in event notifications.
 // rw='w' means to notify when socket is writeable, 'r' - readable, 'h' - closed.
@@ -1283,6 +1286,8 @@ is_valid_tube(const char *name, size_t max)
         name[0] != '-';
 }
 
+
+
 static void
 dispatch_cmd(Conn *c)
 {
@@ -1298,7 +1303,7 @@ dispatch_cmd(Conn *c)
     uint64 id;
     Tube *t = NULL;
 
-    /* NUL-terminate this string so we can use strtol and friends */
+    /* NUL-terminate this string so we can use _STRTOL and friends */
     c->cmd[c->cmd_len - 2] = '\0';
 
     /* check for possible maliciousness */

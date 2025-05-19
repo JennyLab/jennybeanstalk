@@ -16,3 +16,6 @@ void  ctlogpn(const char*, int, const char*, ...) __attribute__((format(printf, 
 	ctlog(__VA_ARGS__);\
 	ctfailnow();\
 } while (0)
+
+
+//#define MAX_TMPPATH_SIZE 8092

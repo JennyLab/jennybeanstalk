@@ -36,7 +36,7 @@ walscandir(Wal *w)
 
     while ((e = readdir(d))) {
         if (strncmp(e->d_name, base, len) == 0) {
-            n = strtol(e->d_name+len, &p, 10);
+            n = _STRTOL(e->d_name+len, &p, 10);
             if (p && *p == '\0') {
                 if (n > max) max = n;
                 if (n < min) min = n;
@@ -212,7 +212,7 @@ makenextfile(Wal *w)
 {
     File *f;
 
-    f = new(File);
+    f = (File *)new(File);
     if (!f) {
         twarnx("OOM");
         return 0;
@@ -404,7 +404,7 @@ waldirlock(Wal *w)
     size_t path_length;
 
     path_length = strlen(w->dir) + strlen("/lock") + 1;
-    if ((path = malloc(path_length)) == NULL) {
+    if ((path = (char *)calloc(1,path_length)) == NULL) {
         twarn("malloc");
         return 0;
     }

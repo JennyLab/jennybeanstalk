@@ -10,7 +10,48 @@
 #include <systemd/sd-daemon.h>
 #endif
 
+
+
+
+
+
+
+#define _STRTOL(str, result, endptr) { \
+    result = 0; \
+    int sign = 1; \
+    if (*str == '-') { \
+        sign = -1; \
+        ++str; \
+    } else if (*str == '+') { \
+        ++str; \
+    } \
+    const char* start = str; \
+    while (*str >= '0' && *str <= '9') { \
+        int digit = *str - '0'; \
+        if (result > (LONG_MAX - digit) / 10) { \
+            result = (sign == 1) ? LONG_MAX : LONG_MIN; \
+            if (endptr) *endptr = (char*)str; \
+            break; \
+        } \
+        result = result * 10 + digit; \
+        ++str; \
+    } \
+    if (endptr) { \
+        *endptr = (*str >= '0' && *str <= '9') || str == start ? (char*)str : (char*)start; \
+    } \
+    result *= sign; \
+}
+
+
+
+
+
+
+
+
+
 const char *progname;
+
 
 static void
 vwarnx(const char *err, const char *fmt, va_list args)
